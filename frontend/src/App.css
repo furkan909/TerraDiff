@@ -1,0 +1,1305 @@
+/* ============================================================
+   TerraDiff — Design System
+   Display: Instrument Serif | Body: DM Sans
+   Palette: Warm dark neutrals + single teal accent
+   Spacing: 8px base scale
+   Border-radius: 6px (universal)
+   ============================================================ */
+
+:root {
+  /* Neutrals — warm dark */
+  --bg-base: #0e0e11;
+  --bg-raised: #141417;
+  --bg-elevated: #1c1c20;
+  --bg-surface: #222227;
+  --bg-hover: #2a2a30;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --border-hover: rgba(255, 255, 255, 0.1);
+
+  /* Text */
+  --text-primary: rgba(255, 255, 255, 0.9);
+  --text-secondary: rgba(255, 255, 255, 0.5);
+  --text-tertiary: rgba(255, 255, 255, 0.28);
+  --text-on-accent: #0e0e11;
+
+  /* Accent — desaturated teal */
+  --accent: #5bb8a4;
+  --accent-dim: rgba(91, 184, 164, 0.1);
+  --accent-hover: #4da695;
+
+  /* Semantic */
+  --success: #5cb883;
+  --success-dim: rgba(92, 184, 131, 0.1);
+  --error: #c75450;
+  --error-dim: rgba(199, 84, 80, 0.1);
+
+  /* Change colors — sampled from matplotlib RdBu_r */
+  --cut-color: #317cb7;
+  --fill-color: #c33b3b;
+
+  /* Type scale — 1.25 ratio, base 16px */
+  --text-xs: 0.6875rem;
+  --text-sm: 0.8125rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: clamp(1.75rem, 3vw, 2.25rem);
+  --text-3xl: clamp(2rem, 4vw, 3rem);
+
+  /* Spacing — 8px base */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-8: 48px;
+  --sp-10: 64px;
+
+  /* Radius — one value, universal */
+  --radius: 6px;
+  --radius-sm: 4px;
+
+  /* Motion — snappy premium curve */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration: 0.2s;
+
+  /* Fonts */
+  --font-display: 'Instrument Serif', serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  /* Focus ring */
+  --focus-ring: 0 0 0 2px var(--bg-base), 0 0 0 4px var(--accent);
+}
+
+/* ---- Reset ---- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-base);
+  overflow: hidden;
+  height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  height: 100vh;
+}
+
+/* ---- Subtle grain texture overlay ---- */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ---- Global focus-visible ---- */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--radius);
+}
+
+/* ---- App shell ---- */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ============================================================
+   Header
+   ============================================================ */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: 0 var(--sp-5);
+  height: 52px;
+  background: var(--bg-raised);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.app-header h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  flex-shrink: 0;
+}
+
+.subtitle {
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--text-tertiary);
+  letter-spacing: 0.03em;
+}
+
+.header-controls {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.reset-btn {
+  margin-left: auto;
+  padding: var(--sp-2) var(--sp-4);
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  flex-shrink: 0;
+  min-height: 36px;
+  transition: color var(--duration) var(--ease-out),
+              border-color var(--duration) var(--ease-out),
+              background var(--duration) var(--ease-out);
+}
+
+.reset-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+  background: var(--bg-elevated);
+}
+
+.reset-btn:active {
+  transform: scale(0.97);
+}
+
+/* ---- Main area ---- */
+.app-main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+}
+
+.center-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* ============================================================
+   Upload Panel
+   ============================================================ */
+.upload-panel {
+  max-width: 480px;
+  width: 100%;
+  padding: var(--sp-8) var(--sp-6);
+}
+
+.upload-panel h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-bottom: var(--sp-2);
+  line-height: 1.15;
+}
+
+.upload-subtitle {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  margin-bottom: var(--sp-6);
+  line-height: 1.6;
+  max-width: 55ch;
+}
+
+.drop-zone {
+  border: 1px dashed var(--border-hover);
+  border-radius: var(--radius);
+  padding: var(--sp-8) var(--sp-5);
+  cursor: pointer;
+  transition: border-color var(--duration) var(--ease-out),
+              background var(--duration) var(--ease-out);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.drop-zone:hover,
+.drop-zone.drag-over {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.drop-zone-icon {
+  color: var(--text-tertiary);
+  transition: color var(--duration) var(--ease-out),
+              transform var(--duration) var(--ease-out);
+}
+
+.drop-zone:hover .drop-zone-icon,
+.drop-zone.drag-over .drop-zone-icon {
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.drop-zone p {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+.file-list {
+  margin: var(--sp-5) 0;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) 0;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
+
+.file-item + .file-item {
+  border-top: 1px solid var(--border);
+}
+
+.file-label {
+  color: var(--text-tertiary);
+  min-width: 64px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+}
+
+.file-name {
+  color: var(--text-tertiary);
+  transition: color var(--duration) var(--ease-out);
+}
+
+.file-name.selected {
+  color: var(--text-primary);
+}
+
+.upload-btn {
+  width: 100%;
+  padding: var(--sp-3) var(--sp-6);
+  background: var(--accent);
+  color: var(--text-on-accent);
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--duration) var(--ease-out),
+              transform var(--duration) var(--ease-out),
+              box-shadow var(--duration) var(--ease-out);
+  min-height: 48px;
+}
+
+.upload-btn:not(:disabled):hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(91, 184, 164, 0.2);
+}
+
+.upload-btn:not(:disabled):active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.upload-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   Processing Status
+   ============================================================ */
+.processing-status {
+  text-align: center;
+  padding: var(--sp-8);
+  max-width: 400px;
+}
+
+.status-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-5);
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.status-badge {
+  padding: var(--sp-1) var(--sp-3);
+  border-radius: var(--radius);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.status-badge.pending,
+.status-badge.reading,
+.status-badge.aligning,
+.status-badge.differencing {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+.status-badge.complete {
+  background: var(--success-dim);
+  color: var(--success);
+}
+
+.status-badge.failed {
+  background: var(--error-dim);
+  color: var(--error);
+}
+
+.progress-text {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+
+.error-text {
+  color: var(--error);
+  font-size: var(--text-sm);
+  margin-top: var(--sp-2);
+}
+
+/* ============================================================
+   3D Viewer area
+   ============================================================ */
+.viewer-area {
+  flex: 1;
+  position: relative;
+  background: var(--bg-base);
+  min-width: 0;
+}
+
+.viewer-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 0;
+}
+
+.viewer-hint {
+  position: absolute;
+  bottom: var(--sp-4);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  letter-spacing: 0.02em;
+  pointer-events: none;
+  opacity: 0.6;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   Time Slider — integrated in header
+   Elevated surface active state instead of heavy solid accent
+   ============================================================ */
+.time-slider {
+  display: flex;
+  gap: 2px;
+  background: var(--bg-elevated);
+  padding: 3px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.mode-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px var(--sp-4);
+  background: transparent;
+  color: var(--text-tertiary);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: color var(--duration) var(--ease-out),
+              background var(--duration) var(--ease-out);
+  min-height: 32px;
+  white-space: nowrap;
+}
+
+.mode-btn .mode-short {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  opacity: 0.5;
+  letter-spacing: 0.04em;
+}
+
+.mode-btn .mode-label {
+  font-weight: 500;
+}
+
+.mode-btn.active {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.mode-btn.active .mode-short {
+  opacity: 0.7;
+  color: var(--accent);
+}
+
+.mode-btn:not(.active):hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+.mode-btn:active {
+  transform: scale(0.97);
+}
+
+/* ============================================================
+   Side Panel
+   ============================================================ */
+.side-panel {
+  width: 300px;
+  background: var(--bg-raised);
+  border-left: 1px solid var(--border);
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+/* Scrollbar styling */
+.side-panel::-webkit-scrollbar {
+  width: 4px;
+}
+
+.side-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.side-panel::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.side-panel::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover);
+}
+
+/* ============================================================
+   Stats Panel — structured sections
+   ============================================================ */
+.stats-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.stats-section {
+  padding: var(--sp-5);
+  border-bottom: 1px solid var(--border);
+}
+
+.stats-section:last-child {
+  border-bottom: none;
+}
+
+.section-label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--sp-4);
+}
+
+/* Stat card: grouped rows on elevated surface with layered shadow */
+.stat-card {
+  background: var(--bg-elevated);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06),
+              0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--sp-3) var(--sp-4);
+}
+
+.stat-row + .stat-row {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.stat-label {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.stat-value {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-value.accent {
+  color: var(--accent);
+}
+
+.stat-value.mono {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+/* ============================================================
+   dZ Hero — large min/max display
+   ============================================================ */
+.dz-summary {
+  margin-bottom: var(--sp-4);
+}
+
+.dz-hero {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--bg-elevated);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06),
+              0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.dz-hero-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--sp-5) var(--sp-3);
+  gap: 4px;
+}
+
+.dz-hero-item.cut {
+  background: rgba(90, 141, 191, 0.06);
+}
+
+.dz-hero-item.fill {
+  background: rgba(191, 106, 90, 0.06);
+}
+
+.dz-hero-value {
+  font-family: var(--font-body);
+  font-size: var(--text-xl);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.dz-hero-item.cut .dz-hero-value {
+  color: var(--cut-color);
+}
+
+.dz-hero-item.fill .dz-hero-value {
+  color: var(--fill-color);
+}
+
+.dz-hero-unit {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.dz-hero-divider {
+  width: 1px;
+  height: 40px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   Inline Legend — horizontal gradient bar in side panel
+   ============================================================ */
+.inline-legend {
+  margin-top: var(--sp-4);
+}
+
+.legend-title {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  margin-bottom: var(--sp-2);
+}
+
+.legend-gradient {
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(
+    to right,
+    #053061 0%,
+    #317cb7 15%,
+    #90c4dd 30%,
+    #f7f6f6 50%,
+    #f3a380 70%,
+    #c33b3b 85%,
+    #67001f 100%
+  );
+}
+
+.legend-range {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--sp-1);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.cut-text {
+  color: var(--cut-color);
+}
+
+.neutral-text {
+  color: var(--text-tertiary);
+}
+
+.fill-text {
+  color: var(--fill-color);
+}
+
+/* ============================================================
+   dZ Histogram
+   ============================================================ */
+.histogram-container {
+  display: flex;
+  justify-content: center;
+}
+
+/* ============================================================
+   Cross-Section Chart
+   ============================================================ */
+.cross-section-container {
+  display: flex;
+  justify-content: center;
+}
+
+/* ============================================================
+   Entrance animations — one orchestrated stagger
+   ============================================================ */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.upload-panel h2 {
+  animation: fadeUp 0.5s var(--ease-out) both;
+}
+
+.upload-subtitle {
+  animation: fadeUp 0.5s var(--ease-out) 0.08s both;
+}
+
+.drop-zone {
+  animation: fadeUp 0.5s var(--ease-out) 0.16s both;
+}
+
+.file-list {
+  animation: fadeUp 0.5s var(--ease-out) 0.24s both;
+}
+
+.upload-btn {
+  animation: fadeUp 0.5s var(--ease-out) 0.32s both;
+}
+
+/* Side panel sections stagger on mount */
+.stats-section {
+  animation: fadeUp 0.4s var(--ease-out) both;
+}
+
+.stats-section:nth-child(1) { animation-delay: 0.05s; }
+.stats-section:nth-child(2) { animation-delay: 0.12s; }
+.stats-section:nth-child(3) { animation-delay: 0.19s; }
+.stats-section:nth-child(4) { animation-delay: 0.26s; }
+.stats-section:nth-child(5) { animation-delay: 0.33s; }
+
+.viewer-hint {
+  animation: fadeUp 0.4s var(--ease-out) 0.3s both;
+}
+
+/* ============================================================
+   Viewer Toolbar — minimal floating tool buttons
+   Icon-only, compact, frosted glass.
+   ============================================================ */
+.viewer-toolbar {
+  position: absolute;
+  top: var(--sp-4);
+  left: var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: rgba(20, 20, 23, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 3px;
+  z-index: 10;
+  animation: fadeUp 0.3s var(--ease-out) 0.1s both;
+}
+
+.tool-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  color: var(--text-tertiary);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color var(--duration) var(--ease-out),
+              background var(--duration) var(--ease-out);
+}
+
+.tool-btn svg {
+  flex-shrink: 0;
+}
+
+.tool-btn.active {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+.tool-btn:not(.active):hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.tool-btn:active {
+  transform: scale(0.92);
+}
+
+.toolbar-divider {
+  width: 24px;
+  height: 1px;
+  background: var(--border);
+  margin: 2px 6px;
+}
+
+/* ============================================================
+   Point Tooltip — floating info card, frosted glass
+   ============================================================ */
+.point-tooltip {
+  position: fixed;
+  z-index: 20;
+  background: rgba(20, 20, 23, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--sp-3) var(--sp-4);
+  min-width: 150px;
+  pointer-events: auto;
+  animation: tooltipIn 0.15s var(--ease-out) both;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2),
+              0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes tooltipIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.tooltip-close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  font-size: var(--text-base);
+  cursor: pointer;
+  line-height: 1;
+  padding: 2px;
+  transition: color var(--duration) var(--ease-out);
+}
+
+.tooltip-close:hover {
+  color: var(--text-primary);
+}
+
+.tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 0;
+  gap: var(--sp-4);
+}
+
+.tooltip-label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-tertiary);
+  letter-spacing: 0.06em;
+}
+
+.tooltip-value {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   Minimap — frosted glass inset, compact
+   ============================================================ */
+.minimap {
+  position: absolute;
+  bottom: var(--sp-8);
+  right: var(--sp-4);
+  width: 140px;
+  height: 140px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  z-index: 20;
+  opacity: 0.85;
+  transition: opacity 0.3s var(--ease-out);
+  animation: fadeUp 0.4s var(--ease-out) 0.25s both;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3),
+              0 8px 24px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+}
+
+.minimap:hover {
+  opacity: 1;
+}
+
+.minimap-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ============================================================
+   dZ Filter — segmented control (matches time slider pattern)
+   ============================================================ */
+.filter-segmented {
+  display: flex;
+  gap: 2px;
+  background: var(--bg-elevated);
+  padding: 3px;
+  border-radius: var(--radius);
+}
+
+.filter-seg-btn {
+  flex: 1;
+  padding: 6px 0;
+  background: transparent;
+  color: var(--text-tertiary);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  min-height: 32px;
+  transition: color var(--duration) var(--ease-out),
+              background var(--duration) var(--ease-out);
+}
+
+.filter-seg-btn.active {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.filter-seg-btn.active.cut {
+  color: var(--cut-color);
+}
+
+.filter-seg-btn.active.fill {
+  color: var(--fill-color);
+}
+
+.filter-seg-btn:not(.active):hover {
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.filter-seg-btn:active {
+  transform: scale(0.96);
+}
+
+/* ============================================================
+   Measure Result — in side panel
+   ============================================================ */
+.measure-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--sp-4);
+}
+
+.measure-header .section-label {
+  margin-bottom: 0;
+}
+
+.measure-clear {
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  cursor: pointer;
+  padding: 2px 0;
+  transition: color var(--duration) var(--ease-out);
+}
+
+.measure-clear:hover {
+  color: var(--accent);
+}
+
+/* ============================================================
+   Viewer Controls — sliders in side panel
+   ============================================================ */
+.control-group {
+  margin-bottom: var(--sp-4);
+}
+
+.control-group:last-child {
+  margin-bottom: 0;
+}
+
+.control-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.control-label {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.control-value {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   Contour Toggle Switch
+   ============================================================ */
+.contour-toggle {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 0;
+  transition: background var(--duration) var(--ease-out),
+              border-color var(--duration) var(--ease-out);
+}
+
+.contour-toggle.on {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+}
+
+.contour-toggle-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+  transition: transform var(--duration) var(--ease-out),
+              background var(--duration) var(--ease-out);
+}
+
+.contour-toggle.on .contour-toggle-knob {
+  transform: translateX(16px);
+  background: var(--accent);
+}
+
+/* Custom range slider — proper height for interaction, thin visual track */
+.control-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 20px;
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+  margin: 4px 0;
+}
+
+/* Track — Webkit (Chrome, Edge, Safari) */
+.control-slider::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 3px;
+  background: var(--bg-surface);
+  border-radius: 2px;
+}
+
+/* Track — Firefox */
+.control-slider::-moz-range-track {
+  width: 100%;
+  height: 3px;
+  background: var(--bg-surface);
+  border-radius: 2px;
+  border: none;
+}
+
+/* Thumb — Webkit */
+.control-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  cursor: pointer;
+  border: 2px solid var(--bg-raised);
+  margin-top: -5.5px;
+  transition: background var(--duration) var(--ease-out),
+              transform var(--duration) var(--ease-out),
+              box-shadow var(--duration) var(--ease-out);
+}
+
+.control-slider::-webkit-slider-thumb:hover {
+  background: var(--accent);
+  transform: scale(1.2);
+  box-shadow: 0 0 0 4px var(--accent-dim);
+}
+
+/* Thumb — Firefox */
+.control-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  cursor: pointer;
+  border: 2px solid var(--bg-raised);
+}
+
+.control-slider::-moz-range-thumb:hover {
+  background: var(--accent);
+}
+
+/* ============================================================
+   Responsive — tablet (< 1024px)
+   ============================================================ */
+@media (max-width: 1024px) {
+  .side-panel {
+    width: 260px;
+  }
+
+  .stats-section {
+    padding: var(--sp-4);
+  }
+
+  .dz-hero-value {
+    font-size: var(--text-lg);
+  }
+}
+
+/* ============================================================
+   Responsive — mobile (< 768px)
+   ============================================================ */
+@media (max-width: 768px) {
+  .app-header {
+    padding: 0 var(--sp-4);
+    gap: var(--sp-3);
+    height: 48px;
+  }
+
+  .app-header h1 {
+    font-size: var(--text-base);
+  }
+
+  .subtitle {
+    display: none;
+  }
+
+  .header-controls {
+    justify-content: flex-end;
+  }
+
+  .mode-btn {
+    padding: 4px var(--sp-3);
+    font-size: var(--text-xs);
+    min-height: 28px;
+    gap: 4px;
+  }
+
+  .mode-btn .mode-short {
+    display: none;
+  }
+
+  .reset-btn {
+    padding: var(--sp-1) var(--sp-3);
+    font-size: var(--text-xs);
+    min-height: 32px;
+  }
+
+  /* Stack viewer and side panel vertically */
+  .app-main {
+    flex-direction: column;
+  }
+
+  .viewer-area {
+    flex: 1;
+    min-height: 50vh;
+  }
+
+  .side-panel {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid var(--border);
+    max-height: 40vh;
+  }
+
+  .stats-section {
+    padding: var(--sp-4);
+  }
+
+  /* Upload panel adjustments */
+  .upload-panel {
+    padding: var(--sp-6) var(--sp-4);
+  }
+
+  .drop-zone {
+    padding: var(--sp-6) var(--sp-4);
+  }
+
+  /* Minimap smaller on mobile */
+  .minimap {
+    width: 100px;
+    height: 100px;
+    bottom: var(--sp-6);
+    right: var(--sp-3);
+  }
+
+  /* Viewer hint */
+  .viewer-hint {
+    display: none;
+  }
+}
+
+/* ============================================================
+   Responsive — small mobile (< 480px)
+   ============================================================ */
+@media (max-width: 480px) {
+  .app-header {
+    height: 44px;
+    padding: 0 var(--sp-3);
+  }
+
+  .time-slider {
+    gap: 1px;
+    padding: 2px;
+  }
+
+  .mode-btn {
+    padding: 4px var(--sp-2);
+    font-size: var(--text-xs);
+  }
+
+  .upload-panel {
+    padding: var(--sp-5) var(--sp-3);
+  }
+
+  .upload-panel h2 {
+    font-size: var(--text-xl);
+  }
+
+  .viewer-toolbar {
+    top: var(--sp-3);
+    left: var(--sp-3);
+  }
+
+  .tool-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .minimap {
+    width: 80px;
+    height: 80px;
+    bottom: var(--sp-4);
+    right: var(--sp-2);
+  }
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

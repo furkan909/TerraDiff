@@ -1,0 +1,8 @@
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+laspy[lazrs]>=2.5.0
+open3d>=0.17.0
+scipy>=1.11.0
+numpy>=1.24.0
+matplotlib>=3.7.0
